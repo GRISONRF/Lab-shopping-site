@@ -6,7 +6,7 @@ put melons in a shopping cart.
 Authors: Joel Burton, Christian Fernandez, Meggie Mahnken, Katie Byers.
 """
 
-from flask import Flask, render_template, redirect, flash, session
+from flask import Flask, render_template, redirect, flash, session, request
 import jinja2
 
 import melons
@@ -65,11 +65,21 @@ def show_shopping_cart():
     # The logic here will be something like:
     #
     # - get the cart dictionary from the session
+    cart_dict = request.form['cart']
+
     # - create a list to hold melon objects and a variable to hold the total
     #   cost of the order
+    cart_lst = []
+    total_cost = 0
     # - loop over the cart dictionary, and for each melon id:
+
+    for melon in cart_dict:
     #    - get the corresponding Melon object
+        melons.get_by_id(melon)    #to get the name and info about each melon?
+        melons.get_by_id(melon).price   #to get the price for that melon?
+        cart_dict[melon]    #to get the qtty of each melon?
     #    - compute the total cost for that type of melon
+
     #    - add this to the order total
     #    - add quantity and total cost as attributes on the Melon object
     #    - add the Melon object to the list created above
