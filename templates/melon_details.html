@@ -15,7 +15,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Price per melon</h5>
                     <div class="card-text">{{ display_melon.price_str() }}</div>
-                    <a class="btn btn-primary" href="/add_to_cart/{{ display_melon.melon_id }}">Add to cart</a>
+                    <a class="btn btn-primary" href="/add_to_cart/{{ display_melon.melon_id }}" method="POST">Add to cart</a>
                 </div>
             </div>
         </div>

@@ -56,39 +56,45 @@ def show_melon(melon_id):
                            display_melon=melon)
 
 
-@app.route("/cart")
+@app.route("/cart",)
 def show_shopping_cart():
     """Display content of shopping cart."""
 
     # TODO: Display the contents of the shopping cart.
-
     # The logic here will be something like:
-    #
+
     # - get the cart dictionary from the session
-    cart_dict = request.form['cart']
+    cart_dict = session.get("cart", {})  # cart = {melonX: 2, melonY: 1}
 
     # - create a list to hold melon objects and a variable to hold the total
     #   cost of the order
-    cart_lst = []
+    
+    # total_each_melon = {} #melonX : $5,  
     total_cost = 0
+    melon_lst = []
     # - loop over the cart dictionary, and for each melon id:
 
-    for melon in cart_dict:
+    for melon_id in cart_dict:    #cart = {melonX: 2, melonY: 1}
     #    - get the corresponding Melon object
-        melons.get_by_id(melon)    #to get the name and info about each melon?
-        melons.get_by_id(melon).price   #to get the price for that melon?
-        cart_dict[melon]    #to get the qtty of each melon?
+        melon = melons.get_by_id(melon_id) 
+        sub_total= melon.price * cart_dict[melon_id]   
+        # total_each_melon[melon_id] = [melon.price * cart_dict[melon_id]] # $5 {melon_id: total_melon}
+        total_cost += sub_total 
+        
+        melon.sub_total = sub_total
     #    - compute the total cost for that type of melon
-
+        melon.qty = cart_dict[melon_id]
     #    - add this to the order total
     #    - add quantity and total cost as attributes on the Melon object
     #    - add the Melon object to the list created above
+        melon_lst.append(melon)
     # - pass the total order cost and the list of Melon objects to the template
+    
     #
     # Make sure your function can also handle the case wherein no cart has
     # been added to the session
 
-    return render_template("cart.html")
+    return render_template("cart.html", total_cost=total_cost, melon_lst=melon_lst)
 
 
 @app.route("/add_to_cart/<melon_id>")
@@ -104,15 +110,15 @@ def add_to_cart(melon_id):
         session['cart'] = {}    #...cria um empty cart
 
     if melon_id not in session['cart']:  #se essa melancia NAO estiver no cart...
-        session['cart'] = {melon_id: 0}   #...vai criar um cart com um dict da melancia e a quantidade de pedidos
-        flash('Melon succesfully added to the cart.')
-        return redirect("/cart")
-
+        session['cart'] = {melon_id: 1}   #...vai criar um cart com um dict da melancia e a quantidade de pedidos
+        
+        
     else:   #caso essa melancia ja esteja no cart...
         session['cart'][melon_id] += 1    #vai alterar o value da key melancia-so adiciona mais uma na que ja ta no cart 
         session.modified = True
-        flash('Melon succesfully added to the cart.')
-        return redirect("/cart")
+        
+    flash('Melon succesfully added to the cart.')
+    return redirect("/cart")
 
 
 # The logic here should be something like
@@ -125,7 +131,7 @@ def add_to_cart(melon_id):
     # - redirect the user to the cart page
 
 
-@app.route("/login", methods=["GET"])
+@app.route("/login", methods=["POST"])
 def show_login():
     """Show login form."""
 
