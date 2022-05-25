@@ -88,8 +88,7 @@ def add_to_cart(melon_id):
     When a melon is added to the cart, redirect browser to the shopping cart
     page and display a confirmation message: 'Melon successfully added to
     cart'."""
-
-    
+  
 
     if 'cart' not in session:
         session['cart'] = {}
@@ -97,11 +96,11 @@ def add_to_cart(melon_id):
         session['cart'][melon_id] += 1
         session.modified = True
         flash('Melon succesfully added to the cart.')
-        return render_template("/cart")
+        return render_template("cart.html")
            
     else:
         session['cart'] = {}
-        return render_template("/cart")
+        return render_template("cart.html")
 
     
 
