@@ -90,34 +90,29 @@ def add_to_cart(melon_id):
     cart'."""
   
 
-    if 'cart' not in session:
-        session['cart'] = {}
-        session['cart'][melon_id] 
-        session['cart'][melon_id] += 1
+    if 'cart' not in session:   #se ja nao tiver um cart na session...
+        session['cart'] = {}    #...cria um empty cart
+
+    if melon_id not in session['cart']:  #se essa melancia NAO estiver no cart...
+        session['cart'] = {melon_id: 0}   #...vai criar um cart com um dict da melancia e a quantidade de pedidos
+        flash('Melon succesfully added to the cart.')
+        return redirect("/cart")
+
+    else:   #caso essa melancia ja esteja no cart...
+        session['cart'][melon_id] += 1    #vai alterar o value da key melancia-so adiciona mais uma na que ja ta no cart 
         session.modified = True
         flash('Melon succesfully added to the cart.')
-        return render_template("cart.html")
-           
-    else:
-        session['cart'] = {}
-        return render_template("cart.html")
-
-    
+        return redirect("/cart")
 
 
-
-
-
-    # The logic here should be something like:
-    #
+# The logic here should be something like
     # - check if a "cart" exists in the session, and create one (an empty
-    #   dictionary keyed to the string "cart") if not
+    #   dictionary keyed to the string "cart")  
+    # if not
     # - check if the desired melon id is the cart, and if not, put it in
     # - increment the count for that melon id by 1
     # - flash a success message
     # - redirect the user to the cart page
-
-    return "Oops! This needs to be implemented!"
 
 
 @app.route("/login", methods=["GET"])
